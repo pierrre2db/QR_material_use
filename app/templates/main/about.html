@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}À propos - Système de Gestion d'Équipements{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">À propos du système</h2>
+                </div>
+                <div class="card-body">
+                    <h3>Système de Gestion d'Équipements avec QR Codes</h3>
+                    <p class="lead">
+                        Cette application permet de gérer l'utilisation des équipements dans un établissement scolaire via des QR codes.
+                    </p>
+                    
+                    <h4 class="mt-4">Fonctionnalités principales</h4>
+                    <ul class="list-group list-group-flush mb-4">
+                        <li class="list-group-item">Génération de QR codes statiques pour les équipements</li>
+                        <li class="list-group-item">Création de sessions d'utilisation par les enseignants</li>
+                        <li class="list-group-item">Génération de QR codes dynamiques pour les sessions</li>
+                        <li class="list-group-item">Suivi des scans par les étudiants</li>
+                        <li class="list-group-item">Tableau de bord adapté au rôle de l'utilisateur</li>
+                    </ul>
+                    
+                    <h4>Comment ça marche</h4>
+                    <p>
+                        Les enseignants scannent le QR code d'un équipement pour créer une session. 
+                        Un QR code dynamique est généré pour cette session, que les étudiants peuvent scanner pour enregistrer leur utilisation.
+                        Les administrateurs peuvent gérer les équipements et visualiser toutes les données.
+                    </p>
+                    
+                    <h4 class="mt-4">Technologies utilisées</h4>
+                    <div class="row text-center mt-3">
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <i class="fab fa-python fa-3x text-primary"></i>
+                            </div>
+                            <h5>Python</h5>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <i class="fab fa-flask fa-3x text-danger"></i>
+                            </div>
+                            <h5>Flask</h5>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <i class="fas fa-database fa-3x text-success"></i>
+                            </div>
+                            <h5>SQLAlchemy</h5>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <i class="fas fa-qrcode fa-3x text-info"></i>
+                            </div>
+                            <h5>QR Code</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

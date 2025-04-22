@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Connexion - Système de Gestion d'Équipements{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Connexion</h4>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-tabs" id="loginTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="form-tab" data-bs-toggle="tab" data-bs-target="#form-login" type="button" role="tab" aria-controls="form-login" aria-selected="true">
+                            <i class="fas fa-user me-2"></i>Connexion par Email
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="quick-tab" data-bs-toggle="tab" data-bs-target="#quick-login" type="button" role="tab" aria-controls="quick-login" aria-selected="false">
+                            <i class="fas fa-bolt me-2"></i>Connexion Rapide
+                        </button>
+                    </li>
+                </ul>
+                
+                <div class="tab-content mt-3" id="loginTabsContent">
+                    <!-- Formulaire de connexion -->
+                    <div class="tab-pane fade show active" id="form-login" role="tabpanel" aria-labelledby="form-tab">
+                        <form method="POST" action="{{ url_for('auth.login') }}">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required 
+                                       value="{{ request.args.get('email', '') }}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Mot de passe</label>
+                                <input type="password" class="form-control" id="password" name="password" 
+                                       placeholder="Par défaut: 1234" value="1234">
+                                <div class="form-text">Le mot de passe par défaut est 1234</div>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Se connecter
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div class="text-center mt-3">
+                            <a href="{{ url_for('auth.test_users') }}" class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-users me-1"></i>Voir les utilisateurs de test
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Connexion rapide par rôle -->
+                    <div class="tab-pane fade" id="quick-login" role="tabpanel" aria-labelledby="quick-tab">
+                        <p class="lead text-center mb-4">Choisissez un rôle pour vous connecter rapidement :</p>
+                        
+                        <div class="d-grid gap-3">
+                            <a href="{{ url_for('auth.auto_login', role='admin') }}" class="btn btn-outline-primary">
+                                <i class="fas fa-user-shield me-2"></i>Se connecter comme Administrateur
+                            </a>
+                            <a href="{{ url_for('auth.auto_login', role='teacher') }}" class="btn btn-outline-success">
+                                <i class="fas fa-chalkboard-teacher me-2"></i>Se connecter comme Enseignant
+                            </a>
+                            <a href="{{ url_for('auth.auto_login', role='student') }}" class="btn btn-outline-info">
+                                <i class="fas fa-user-graduate me-2"></i>Se connecter comme Étudiant
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info mt-4">
+                    <p class="mb-0"><small>Les données utilisateurs sont synchronisées avec Google Sheets. Pour le développement, des utilisateurs de test sont disponibles.</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

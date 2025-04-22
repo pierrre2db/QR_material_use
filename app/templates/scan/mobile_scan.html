@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+
+{% block title %}Scanner un QR Code{% endblock %}
+
+{% block extra_head %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<style>
+    #qr-reader {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    #qr-reader__status_span {
+        color: #00796b;
+        font-weight: bold;
+    }
+    
+    #qr-reader__dashboard_section_csr button {
+        background-color: #00796b;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    .scan-result {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 5px;
+    }
+    
+    .scan-success {
+        background-color: #e8f5e9;
+        border: 1px solid #a5d6a7;
+        color: #2e7d32;
+    }
+    
+    .scan-error {
+        background-color: #ffebee;
+        border: 1px solid #ef9a9a;
+        color: #c62828;
+    }
+    
+    .hidden {
+        display: none;
+    }
+    
+    @media (max-width: 768px) {
+        .container {
+            padding: 10px;
+        }
+        
+        .card {
+            margin-bottom: 15px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Scanner un QR Code</h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead text-center mb-4">Utilisez la caméra de votre appareil pour scanner le QR code de la session</p>
+                    
+                    <div id="qr-reader"></div>
+                    
+                    <div id="scan-result" class="scan-result hidden"></div>
+                    
+                    <div class="text-center mt-4">
+                        <button id="reset-scan" class="btn btn-secondary hidden">
+                            <i class="fas fa-redo me-2"></i>Scanner un autre QR code
+                        </button>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <span>Pour scanner un QR code, autorisez l'accès à votre caméra lorsque demandé.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card shadow mt-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Informations</h5>
+                </div>
+                <div class="card-body">
+                    <p>En scannant le QR code d'une session :</p>
+                    <ul>
+                        <li>Votre présence sera enregistrée pour cette session</li>
+                        <li>L'enseignant pourra voir que vous avez participé</li>
+                        <li>Vous aurez accès aux détails de la session dans votre historique</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const qrReader = document.getElementById('qr-reader');
+        const scanResult = document.getElementById('scan-result');
+        const resetScanBtn = document.getElementById('reset-scan');
+        
+        // Configuration du lecteur QR
+        const html5QrCode = new Html5Qrcode("qr-reader");
+        const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+            // Arrêter le scan après un résultat
+            html5QrCode.stop();
+            
+            // Traiter le résultat du scan
+            processScanResult(decodedText);
+        };
+        
+        const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+        
+        // Démarrer le scan avec la caméra arrière par défaut
+        html5QrCode.start({ facingMode: "environment" }, config, qrCodeSuccessCallback);
+        
+        // Fonction pour traiter le résultat du scan
+        function processScanResult(qrCodeData) {
+            // Envoyer les données au serveur
+            fetch('/api/scan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ qr_code: qrCodeData }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Afficher le message de succès
+                    scanResult.innerHTML = `
+                        <div class="text-center">
+                            <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                            <h5>Scan réussi !</h5>
+                            <p>${data.message}</p>
+                        </div>
+                    `;
+                    scanResult.classList.add('scan-success');
+                } else {
+                    // Afficher le message d'erreur
+                    scanResult.innerHTML = `
+                        <div class="text-center">
+                            <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                            <h5>Erreur</h5>
+                            <p>${data.message}</p>
+                        </div>
+                    `;
+                    scanResult.classList.add('scan-error');
+                }
+                
+                // Afficher le résultat et le bouton de réinitialisation
+                scanResult.classList.remove('hidden');
+                resetScanBtn.classList.remove('hidden');
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                scanResult.innerHTML = `
+                    <div class="text-center">
+                        <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
+                        <h5>Erreur de connexion</h5>
+                        <p>Impossible de communiquer avec le serveur. Veuillez réessayer.</p>
+                    </div>
+                `;
+                scanResult.classList.add('scan-error');
+                scanResult.classList.remove('hidden');
+                resetScanBtn.classList.remove('hidden');
+            });
+        }
+        
+        // Réinitialiser le scan
+        resetScanBtn.addEventListener('click', function() {
+            scanResult.classList.add('hidden');
+            scanResult.classList.remove('scan-success', 'scan-error');
+            resetScanBtn.classList.add('hidden');
+            
+            // Redémarrer le scan
+            html5QrCode.start({ facingMode: "environment" }, config, qrCodeSuccessCallback);
+        });
+    });
+</script>
+{% endblock %}

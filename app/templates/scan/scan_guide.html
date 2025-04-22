@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{% block title %}Guide de Scan QR Code{% endblock %}
+
+{% block extra_head %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+    .guide-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .step-card {
+        margin-bottom: 20px;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    
+    .step-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .step-header {
+        background-color: #4e73df;
+        color: white;
+        padding: 15px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    
+    .step-body {
+        padding: 20px;
+        background-color: white;
+    }
+    
+    .step-image {
+        text-align: center;
+        margin: 15px 0;
+    }
+    
+    .step-image img {
+        max-width: 100%;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+    }
+    
+    .action-button {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        background-color: #4e73df;
+        color: white;
+        text-align: center;
+        border-radius: 5px;
+        font-weight: bold;
+        text-decoration: none;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+    }
+    
+    .action-button:hover {
+        background-color: #2e59d9;
+        color: white;
+        text-decoration: none;
+    }
+    
+    .icon-container {
+        font-size: 48px;
+        text-align: center;
+        margin: 20px 0;
+        color: #4e73df;
+    }
+    
+    @media (max-width: 768px) {
+        .step-header {
+            font-size: 16px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4 guide-container">
+    <div class="text-center mb-4">
+        <h1 class="h2 mb-0">Guide de Scan QR Code</h1>
+        <p class="lead text-muted">Suivez ces étapes pour scanner un QR code et enregistrer votre présence</p>
+    </div>
+    
+    <div class="step-card">
+        <div class="step-header">
+            Étape 1: Accéder à la page de scan
+        </div>
+        <div class="step-body">
+            <div class="icon-container">
+                <i class="fas fa-mobile-alt"></i>
+            </div>
+            <p>Utilisez votre smartphone pour accéder à la page de scan en cliquant sur le bouton ci-dessous ou en scannant le QR code affiché par votre enseignant.</p>
+            <a href="{{ url_for('scan.mobile_scan') }}" class="action-button">
+                <i class="fas fa-qrcode me-2"></i>Accéder à la page de scan
+            </a>
+        </div>
+    </div>
+    
+    <div class="step-card">
+        <div class="step-header">
+            Étape 2: Autoriser l'accès à la caméra
+        </div>
+        <div class="step-body">
+            <div class="icon-container">
+                <i class="fas fa-camera"></i>
+            </div>
+            <p>Lorsque vous y êtes invité, autorisez l'accès à la caméra de votre appareil. Cette permission est nécessaire pour scanner le QR code.</p>
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>Si vous avez refusé l'accès à la caméra, vous devrez modifier les paramètres de votre navigateur pour l'autoriser à nouveau.
+            </div>
+        </div>
+    </div>
+    
+    <div class="step-card">
+        <div class="step-header">
+            Étape 3: Scanner le QR code
+        </div>
+        <div class="step-body">
+            <div class="icon-container">
+                <i class="fas fa-qrcode"></i>
+            </div>
+            <p>Pointez votre caméra vers le QR code affiché par votre enseignant. Maintenez votre téléphone stable jusqu'à ce que le scan soit détecté.</p>
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle me-2"></i>Assurez-vous que le QR code est bien visible et que l'éclairage est suffisant.
+            </div>
+        </div>
+    </div>
+    
+    <div class="step-card">
+        <div class="step-header">
+            Étape 4: Confirmer votre présence
+        </div>
+        <div class="step-body">
+            <div class="icon-container">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <p>Une fois le QR code scanné, vous serez invité à vous connecter si ce n'est pas déjà fait. Après connexion, votre présence sera automatiquement enregistrée.</p>
+            <div class="alert alert-success">
+                <i class="fas fa-thumbs-up me-2"></i>Une page de confirmation s'affichera lorsque votre présence aura été enregistrée avec succès.
+            </div>
+        </div>
+    </div>
+    
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title">Besoin d'aide?</h5>
+            <p>Si vous rencontrez des difficultés pour scanner le QR code, essayez les solutions suivantes:</p>
+            <ul>
+                <li>Assurez-vous que votre appareil dispose d'une caméra fonctionnelle</li>
+                <li>Vérifiez que vous avez autorisé l'accès à la caméra dans les paramètres de votre navigateur</li>
+                <li>Assurez-vous que l'éclairage est suffisant pour que le QR code soit visible</li>
+                <li>Tenez votre téléphone stable pendant le scan</li>
+                <li>Si le problème persiste, contactez votre enseignant</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}Aide - Système de Gestion d'Équipements{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Aide et support</h2>
+                </div>
+                <div class="card-body">
+                    <h3>Comment utiliser le système</h3>
+                    
+                    <div class="accordion mt-4" id="helpAccordion">
+                        <!-- Section pour les enseignants -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Guide pour les enseignants
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#helpAccordion">
+                                <div class="accordion-body">
+                                    <h5>Créer une session</h5>
+                                    <ol>
+                                        <li>Connectez-vous avec votre compte enseignant</li>
+                                        <li>Cliquez sur "Créer une session" dans votre tableau de bord</li>
+                                        <li>Sélectionnez l'équipement que vous souhaitez utiliser</li>
+                                        <li>Une session sera créée avec un QR code dynamique</li>
+                                        <li>Partagez ce QR code avec vos étudiants pour qu'ils puissent s'enregistrer</li>
+                                    </ol>
+                                    
+                                    <h5 class="mt-3">Scanner un équipement</h5>
+                                    <ol>
+                                        <li>Utilisez l'application mobile ou l'appareil photo de votre téléphone</li>
+                                        <li>Scannez le QR code statique de l'équipement</li>
+                                        <li>Une session sera automatiquement créée</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Section pour les étudiants -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    Guide pour les étudiants
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#helpAccordion">
+                                <div class="accordion-body">
+                                    <h5>Scanner une session</h5>
+                                    <ol>
+                                        <li>Connectez-vous avec votre compte étudiant</li>
+                                        <li>Demandez à votre enseignant de vous montrer le QR code de la session</li>
+                                        <li>Utilisez l'application mobile ou l'appareil photo de votre téléphone pour scanner le QR code</li>
+                                        <li>Votre présence sera automatiquement enregistrée</li>
+                                    </ol>
+                                    
+                                    <h5 class="mt-3">Consulter votre historique</h5>
+                                    <ol>
+                                        <li>Connectez-vous à votre compte</li>
+                                        <li>Votre tableau de bord affiche automatiquement vos scans récents</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Section pour les administrateurs -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    Guide pour les administrateurs
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#helpAccordion">
+                                <div class="accordion-body">
+                                    <h5>Gérer les équipements</h5>
+                                    <ol>
+                                        <li>Connectez-vous avec votre compte administrateur</li>
+                                        <li>Cliquez sur "Équipements" dans la barre de navigation</li>
+                                        <li>Vous pouvez ajouter, modifier ou supprimer des équipements</li>
+                                        <li>Pour chaque équipement, vous pouvez générer et imprimer son QR code statique</li>
+                                    </ol>
+                                    
+                                    <h5 class="mt-3">Consulter les statistiques</h5>
+                                    <ol>
+                                        <li>Votre tableau de bord affiche un résumé des statistiques</li>
+                                        <li>Vous pouvez voir le nombre d'équipements, d'utilisateurs et de sessions</li>
+                                        <li>Vous avez accès à toutes les sessions et tous les logs de scan</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-5">
+                        <h4>Besoin d'aide supplémentaire?</h4>
+                        <p>Si vous rencontrez des problèmes ou avez des questions, veuillez contacter l'administrateur système.</p>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-3">
+                            <a href="mailto:support@ecole.be" class="btn btn-outline-primary">
+                                <i class="fas fa-envelope me-2"></i>Contacter le support
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

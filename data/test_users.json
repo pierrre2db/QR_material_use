@@ -1,0 +1,44 @@
+[
+    {
+        "id": "admin@ecole.be",
+        "nom_complet": "Administrateur",
+        "role": "Admin",
+        "password": "1234"
+    },
+    {
+        "id": "prof1@ecole.be",
+        "nom_complet": "Jean Dupont",
+        "role": "Enseignant",
+        "password": "1234"
+    },
+    {
+        "id": "prof2@ecole.be",
+        "nom_complet": "Marie Curie",
+        "role": "Enseignant",
+        "password": "1234"
+    },
+    {
+        "id": "prof3@ecole.be",
+        "nom_complet": "Albert Einstein",
+        "role": "Enseignant",
+        "password": "1234"
+    },
+    {
+        "id": "etudiant1@ecole.be",
+        "nom_complet": "Pierre Martin",
+        "role": "Etudiant",
+        "password": "1234"
+    },
+    {
+        "id": "etudiant2@ecole.be",
+        "nom_complet": "Sophie Dubois",
+        "role": "Etudiant",
+        "password": "1234"
+    },
+    {
+        "id": "etudiant3@ecole.be",
+        "nom_complet": "Lucas Bernard",
+        "role": "Etudiant",
+        "password": "1234"
+    }
+]

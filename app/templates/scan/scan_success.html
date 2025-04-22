@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Scan Réussi{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="fas fa-check-circle me-2"></i>Scan Réussi</h4>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <i class="fas fa-check-circle fa-5x text-success"></i>
+                    </div>
+                    
+                    <h5 class="mb-3">{{ message }}</h5>
+                    
+                    {% if session %}
+                    <div class="alert alert-info mt-4">
+                        <h6>Informations sur la session</h6>
+                        <p><strong>Nom:</strong> {{ session.nom_session }}</p>
+                        <p><strong>Équipement:</strong> {{ session.equipment.type_equipement }} ({{ session.equipment.nom_salle }})</p>
+                        <p><strong>Enseignant:</strong> {{ session.enseignant.nom_complet }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mt-4">
+                        <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">
+                            <i class="fas fa-home me-2"></i>Retour au tableau de bord
+                        </a>
+                        <a href="{{ url_for('scan.mobile_scan') }}" class="btn btn-outline-secondary ms-2">
+                            <i class="fas fa-qrcode me-2"></i>Scanner un autre QR code
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

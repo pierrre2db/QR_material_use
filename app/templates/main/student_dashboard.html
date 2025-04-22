@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}Tableau de bord Étudiant - Système de Gestion d'Équipements{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Tableau de bord Étudiant</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Mes scans récents</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Équipement</th>
+                                <th>Salle</th>
+                                <th>Enseignant</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in logs %}
+                            <tr>
+                                <td>{{ log.timestamp_scan.strftime('%d/%m/%Y %H:%M') }}</td>
+                                <td>{{ log.session.equipement.type_equipement }}</td>
+                                <td>{{ log.session.equipement.nom_salle }}</td>
+                                <td>{{ log.session.enseignant.nom_complet }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center">Aucun scan récent</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Scanner un QR code</h5>
+            </div>
+            <div class="card-body text-center">
+                <p>Scannez le QR code de session fourni par votre enseignant pour enregistrer votre présence.</p>
+                <button id="scanQrButton" class="btn btn-success btn-lg mt-3">
+                    <i class="fas fa-qrcode me-2"></i>Scanner un QR code
+                </button>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Statistiques</h5>
+            </div>
+            <div class="card-body">
+                <div class="stats-card">
+                    <div class="stats-icon text-info">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stats-number">{{ logs|length }}</div>
+                    <div class="stats-label">Sessions enregistrées</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Guide rapide</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="text-center mb-3">
+                            <i class="fas fa-qrcode fa-3x text-info"></i>
+                        </div>
+                        <h5 class="text-center">1. Obtenez le QR code</h5>
+                        <p class="text-center">Demandez à votre enseignant de vous montrer le QR code de la session.</p>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center mb-3">
+                            <i class="fas fa-mobile-alt fa-3x text-info"></i>
+                        </div>
+                        <h5 class="text-center">2. Scannez le code</h5>
+                        <p class="text-center">Utilisez l'application mobile ou l'appareil photo de votre téléphone pour scanner le QR code.</p>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center mb-3">
+                            <i class="fas fa-history fa-3x text-info"></i>
+                        </div>
+                        <h5 class="text-center">3. Consultez votre historique</h5>
+                        <p class="text-center">Retrouvez l'historique de vos scans dans votre tableau de bord.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('scanQrButton').addEventListener('click', function() {
+        alert('Cette fonctionnalité utiliserait la caméra pour scanner un QR code dans une application réelle.');
+        // Simuler un scan pour la démo
+        simulateScan('SESSION_123456_20250419');
+    });
+</script>
+{% endblock %}

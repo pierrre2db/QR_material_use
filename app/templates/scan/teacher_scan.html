@@ -1,0 +1,406 @@
+{% extends 'base.html' %}
+
+{% block title %}Scan d'Équipement - Enseignant{% endblock %}
+
+{% block extra_head %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<script src="https://unpkg.com/html5-qrcode@2.3.4/html5-qrcode.min.js"></script>
+<style>
+    #qr-reader {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    #qr-reader__scan_region {
+        position: relative;
+    }
+    
+    #qr-reader__scan_region::before {
+        content: "";
+        display: block;
+        padding-top: 100%;
+    }
+    
+    #qr-reader__dashboard {
+        margin-top: 15px;
+    }
+    
+    .scan-result-container {
+        margin-top: 20px;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+    }
+    
+    .session-info {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 5px;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+    }
+    
+    .qr-container {
+        text-align: center;
+        margin: 20px auto;
+        max-width: 300px;
+    }
+    
+    .qr-image {
+        max-width: 100%;
+        height: auto;
+        border: 1px solid #ddd;
+        padding: 10px;
+        background: white;
+    }
+    
+    .hidden {
+        display: none;
+    }
+    
+    .action-buttons {
+        margin-top: 20px;
+    }
+    
+    .action-buttons .btn {
+        margin: 5px;
+    }
+    
+    .student-list {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Scanner un équipement</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Scannez le QR code de l'équipement pour créer automatiquement une session.
+                    </div>
+                    
+                    <div id="qr-reader"></div>
+                    
+                    <div id="scan-result" class="scan-result-container mt-4 hidden">
+                        <!-- Le résultat du scan sera affiché ici -->
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <button id="reset-scan" class="btn btn-outline-secondary hidden">
+                            <i class="fas fa-redo me-1"></i>Scanner à nouveau
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div id="session-details" class="card shadow mb-4 hidden">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Session active</h4>
+                </div>
+                <div class="card-body">
+                    <div id="session-info">
+                        <!-- Les informations de la session seront affichées ici -->
+                    </div>
+                    
+                    <div id="qr-code-container" class="qr-container hidden">
+                        <!-- Le QR code de la session sera affiché ici -->
+                    </div>
+                    
+                    <div id="student-url-container" class="mt-4 hidden">
+                        <h5>URL pour les étudiants</h5>
+                        <p>Partagez cette URL avec vos étudiants pour qu'ils puissent scanner le QR code :</p>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="student-url" readonly>
+                            <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('student-url')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="students-list-container" class="card shadow hidden">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0">Étudiants présents</h4>
+                </div>
+                <div class="card-body">
+                    <div class="student-list">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Étudiant</th>
+                                    <th>Heure d'arrivée</th>
+                                </tr>
+                            </thead>
+                            <tbody id="students-table-body">
+                                <!-- La liste des étudiants sera affichée ici -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <button id="refresh-students" class="btn btn-outline-info">
+                            <i class="fas fa-sync-alt me-1"></i>Actualiser
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const qrReader = document.getElementById('qr-reader');
+        const scanResult = document.getElementById('scan-result');
+        const resetScanBtn = document.getElementById('reset-scan');
+        const sessionDetails = document.getElementById('session-details');
+        const sessionInfo = document.getElementById('session-info');
+        const qrCodeContainer = document.getElementById('qr-code-container');
+        const studentUrlContainer = document.getElementById('student-url-container');
+        const studentUrl = document.getElementById('student-url');
+        const studentsListContainer = document.getElementById('students-list-container');
+        const studentsTableBody = document.getElementById('students-table-body');
+        const refreshStudentsBtn = document.getElementById('refresh-students');
+        
+        let currentSessionId = null;
+        
+        // Configuration du lecteur QR
+        const html5QrCode = new Html5Qrcode("qr-reader");
+        const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+            // Arrêter le scan après un résultat
+            html5QrCode.stop();
+            
+            // Traiter le résultat du scan
+            processScanResult(decodedText);
+            
+            // Afficher le bouton pour scanner à nouveau
+            resetScanBtn.classList.remove('hidden');
+        };
+        
+        const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+        
+        // Démarrer le scan avec la caméra arrière par défaut
+        html5QrCode.start({ facingMode: "environment" }, config, qrCodeSuccessCallback);
+        
+        // Fonction pour traiter le résultat du scan
+        function processScanResult(qrCodeData) {
+            // Envoyer les données au serveur
+            fetch('/api/scan-equipment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ qr_code: qrCodeData }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Afficher le message de succès
+                    scanResult.innerHTML = `
+                        <div class="text-center">
+                            <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                            <h5>Scan réussi !</h5>
+                            <p>${data.message}</p>
+                        </div>
+                    `;
+                    scanResult.classList.remove('hidden');
+                    
+                    // Charger les détails de la session
+                    currentSessionId = data.session_id;
+                    loadSessionDetails(data.session_id);
+                } else {
+                    // Afficher le message d'erreur
+                    scanResult.innerHTML = `
+                        <div class="text-center">
+                            <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                            <h5>Erreur</h5>
+                            <p>${data.message}</p>
+                        </div>
+                    `;
+                    scanResult.classList.remove('hidden');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                scanResult.innerHTML = `
+                    <div class="text-center">
+                        <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                        <h5>Erreur</h5>
+                        <p>Une erreur est survenue lors du traitement du scan.</p>
+                    </div>
+                `;
+                scanResult.classList.remove('hidden');
+            });
+        }
+        
+        // Fonction pour charger les détails de la session
+        function loadSessionDetails(sessionId) {
+            fetch(`/sessions/${sessionId}`)
+            .then(response => response.text())
+            .then(html => {
+                // Extraire les informations nécessaires de la réponse HTML
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Afficher les informations de la session
+                const sessionInfoHtml = `
+                    <h5>Session active</h5>
+                    <p><strong>Équipement:</strong> <span id="equipment-name"></span></p>
+                    <p><strong>Salle:</strong> <span id="room-name"></span></p>
+                    <p><strong>Date:</strong> <span id="session-date"></span></p>
+                `;
+                sessionInfo.innerHTML = sessionInfoHtml;
+                
+                // Charger le QR code de la session
+                loadSessionQRCode(sessionId);
+                
+                // Afficher l'URL pour les étudiants
+                studentUrl.value = `${window.location.origin}/mobile-scan`;
+                studentUrlContainer.classList.remove('hidden');
+                
+                // Afficher les détails de la session
+                sessionDetails.classList.remove('hidden');
+                
+                // Charger la liste des étudiants
+                loadStudentsList(sessionId);
+                
+                // Afficher le conteneur de la liste des étudiants
+                studentsListContainer.classList.remove('hidden');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        
+        // Fonction pour charger le QR code de la session
+        function loadSessionQRCode(sessionId) {
+            fetch(`/sessions/${sessionId}/qr-code`)
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Extraire l'image du QR code
+                const qrCodeImg = doc.querySelector('.qr-image');
+                
+                if (qrCodeImg) {
+                    qrCodeContainer.innerHTML = `
+                        <img src="${qrCodeImg.src}" alt="QR Code de Session" class="qr-image">
+                        <div class="action-buttons text-center">
+                            <a href="/sessions/${sessionId}/qr-code" target="_blank" class="btn btn-primary">
+                                <i class="fas fa-expand me-1"></i>Afficher en plein écran
+                            </a>
+                            <a href="/sessions/${sessionId}/qr-code/download" class="btn btn-outline-success">
+                                <i class="fas fa-download me-1"></i>Télécharger
+                            </a>
+                        </div>
+                    `;
+                    qrCodeContainer.classList.remove('hidden');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        
+        // Fonction pour charger la liste des étudiants
+        function loadStudentsList(sessionId) {
+            fetch(`/sessions/${sessionId}`)
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Extraire les lignes de la table des étudiants
+                const studentRows = doc.querySelectorAll('table tbody tr');
+                
+                if (studentRows.length > 0) {
+                    studentsTableBody.innerHTML = '';
+                    
+                    studentRows.forEach(row => {
+                        studentsTableBody.appendChild(row.cloneNode(true));
+                    });
+                } else {
+                    studentsTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="2" class="text-center">Aucun étudiant pour le moment</td>
+                        </tr>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        
+        // Événement pour scanner à nouveau
+        resetScanBtn.addEventListener('click', function() {
+            html5QrCode.start({ facingMode: "environment" }, config, qrCodeSuccessCallback);
+            scanResult.classList.add('hidden');
+            resetScanBtn.classList.add('hidden');
+        });
+        
+        // Événement pour actualiser la liste des étudiants
+        refreshStudentsBtn.addEventListener('click', function() {
+            if (currentSessionId) {
+                loadStudentsList(currentSessionId);
+            }
+        });
+        
+        // Fonction pour copier l'URL dans le presse-papier
+        window.copyToClipboard = function(elementId) {
+            const copyText = document.getElementById(elementId);
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+            
+            // Afficher une notification
+            const tooltip = document.createElement("div");
+            tooltip.textContent = "URL copiée !";
+            tooltip.style.position = "fixed";
+            tooltip.style.top = "20px";
+            tooltip.style.left = "50%";
+            tooltip.style.transform = "translateX(-50%)";
+            tooltip.style.padding = "10px 20px";
+            tooltip.style.background = "#4CAF50";
+            tooltip.style.color = "white";
+            tooltip.style.borderRadius = "5px";
+            tooltip.style.zIndex = "1000";
+            
+            document.body.appendChild(tooltip);
+            
+            setTimeout(function() {
+                tooltip.style.opacity = "0";
+                tooltip.style.transition = "opacity 0.5s";
+                setTimeout(function() {
+                    document.body.removeChild(tooltip);
+                }, 500);
+            }, 2000);
+        };
+        
+        // Si un ID de session est déjà disponible (par exemple, après une redirection), charger les détails
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('session_id');
+        
+        if (sessionId) {
+            currentSessionId = sessionId;
+            loadSessionDetails(sessionId);
+        }
+    });
+</script>
+{% endblock %}

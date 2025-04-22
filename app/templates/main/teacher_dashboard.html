@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %}Tableau de bord Enseignant - Système de Gestion d'Équipements{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Tableau de bord Enseignant</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Mes sessions récentes</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Équipement</th>
+                                <th>Salle</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for session in sessions[:5] %}
+                            <tr>
+                                <td>{{ session.timestamp_debut.strftime('%d/%m/%Y %H:%M') }}</td>
+                                <td>{{ session.equipement.type_equipement }}</td>
+                                <td>{{ session.equipement.nom_salle }}</td>
+                                <td>
+                                    <a href="{{ url_for('session.view_session', session_id=session.id) }}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center">Aucune session récente</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-grid mt-3">
+                    <a href="{{ url_for('session.list_sessions') }}" class="btn btn-outline-primary">Voir toutes mes sessions</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Équipements disponibles</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Type</th>
+                                <th>Salle</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for equipment in equipments[:5] %}
+                            <tr>
+                                <td>{{ equipment.id }}</td>
+                                <td>{{ equipment.type_equipement }}</td>
+                                <td>{{ equipment.nom_salle }}</td>
+                                <td>
+                                    <a href="{{ url_for('equipment.view_equipment', equipment_id=equipment.id) }}" class="btn btn-sm btn-success">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center">Aucun équipement disponible</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-grid mt-3">
+                    <a href="{{ url_for('equipment.list_equipments') }}" class="btn btn-outline-success">Voir tous les équipements</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Actions rapides</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <a href="{{ url_for('session.create_session') }}" class="btn btn-primary btn-lg d-block mb-2">
+                            <i class="fas fa-play-circle me-2"></i>Créer une nouvelle session
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{{ url_for('scan.teacher_scan') }}" class="btn btn-success btn-lg d-block mb-2">
+                            <i class="fas fa-qrcode me-2"></i>Scanner un QR code d'équipement
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Guide rapide</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="text-center mb-3">
+                            <i class="fas fa-qrcode fa-3x text-info"></i>
+                        </div>
+                        <h5 class="text-center">1. Scanner un équipement</h5>
+                        <p class="text-center">Utilisez l'application mobile ou l'appareil photo de votre téléphone pour scanner le QR code d'un équipement.</p>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center mb-3">
+                            <i class="fas fa-share-alt fa-3x text-info"></i>
+                        </div>
+                        <h5 class="text-center">2. Partager avec les étudiants</h5>
+                        <p class="text-center">Partagez le QR code dynamique de session avec vos étudiants pour qu'ils puissent s'enregistrer.</p>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center mb-3">
+                            <i class="fas fa-chart-line fa-3x text-info"></i>
+                        </div>
+                        <h5 class="text-center">3. Suivre la participation</h5>
+                        <p class="text-center">Consultez en temps réel les étudiants qui ont scanné le QR code de votre session.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('scanQrButton').addEventListener('click', function() {
+        alert('Cette fonctionnalité utiliserait la caméra pour scanner un QR code dans une application réelle.');
+        // Rediriger vers la page de création de session
+        window.location.href = "{{ url_for('session.create_session') }}";
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}QR Code de Session{% endblock %}
+
+{% block extra_head %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+    .qr-container {
+        text-align: center;
+        margin: 20px auto;
+        max-width: 350px;
+    }
+    
+    .qr-image {
+        max-width: 100%;
+        height: auto;
+        border: 1px solid #ddd;
+        padding: 10px;
+        background: white;
+    }
+    
+    .session-info {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 5px;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+    }
+    
+    .action-buttons {
+        margin-top: 20px;
+    }
+    
+    .action-buttons .btn {
+        margin: 5px;
+    }
+    
+    @media print {
+        .no-print {
+            display: none;
+        }
+        
+        .qr-container {
+            max-width: 100%;
+        }
+        
+        .card {
+            border: none;
+            box-shadow: none;
+        }
+        
+        .card-header {
+            background-color: white !important;
+            color: black !important;
+            border-bottom: 1px solid #ddd;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">QR Code de Session</h4>
+                </div>
+                <div class="card-body">
+                    <div class="qr-container">
+                        <img src="data:image/png;base64,{{ qr_code_image }}" alt="QR Code de Session" class="qr-image">
+                        
+                        <div class="session-info mt-4">
+                            <h5>{{ session.nom_session }}</h5>
+                            <p><strong>Équipement:</strong> {{ session.equipement.type_equipement }} ({{ session.equipement.nom_salle }})</p>
+                            <p><strong>Enseignant:</strong> {{ session.enseignant.nom_complet }}</p>
+                            <p><strong>Date:</strong> {{ session.timestamp_debut.strftime('%d/%m/%Y %H:%M') }}</p>
+                            <p><strong>État:</strong> 
+                                {% if session.actif %}
+                                <span class="badge bg-success">Active</span>
+                                {% else %}
+                                <span class="badge bg-danger">Inactive</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons text-center no-print">
+                        <a href="{{ url_for('session.download_qr_code', session_id=session.id) }}" class="btn btn-primary">
+                            <i class="fas fa-download me-2"></i>Télécharger le QR Code
+                        </a>
+                        <button onclick="window.print()" class="btn btn-outline-secondary">
+                            <i class="fas fa-print me-2"></i>Imprimer
+                        </button>
+                        <a href="{{ url_for('session.view_session', session_id=session.id) }}" class="btn btn-outline-info">
+                            <i class="fas fa-arrow-left me-2"></i>Retour aux détails
+                        </a>
+                    </div>
+                    
+                    <div class="alert alert-info mt-4 no-print">
+                        <h6><i class="fas fa-info-circle me-2"></i>Comment utiliser ce QR Code</h6>
+                        <ol class="mb-0">
+                            <li>Affichez ce QR code pour que les étudiants puissent le scanner</li>
+                            <li>Les étudiants doivent utiliser leur smartphone pour scanner ce QR code</li>
+                            <li>Ils peuvent accéder à la page de scan à l'adresse <strong>{{ request.host_url }}mobile-scan</strong></li>
+                            <li>Une fois scanné, leur présence sera automatiquement enregistrée</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

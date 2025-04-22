@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+
+{% block title %}Détails de la Session - Système de Gestion d'Équipements{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('main.dashboard') }}">Tableau de bord</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('session.list_sessions') }}">Sessions</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Session du {{ session.timestamp_debut.strftime('%d/%m/%Y %H:%M') }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Détails de la session</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h5>Date et heure</h5>
+                        <p class="lead">{{ session.timestamp_debut.strftime('%d/%m/%Y %H:%M') }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <h5>Enseignant</h5>
+                        <p class="lead">{{ teacher.nom_complet }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <h5>Équipement</h5>
+                        <p class="lead">{{ equipment.type_equipement }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <h5>Salle</h5>
+                        <p class="lead">{{ equipment.nom_salle }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <h5>Participants</h5>
+                        <p class="lead">{{ logs|length }} étudiant(s)</p>
+                    </div>
+                    <div class="mb-3">
+                        <h5>Statut</h5>
+                        {% if session.actif %}
+                            <p class="lead">
+                                <span class="badge bg-success">Active</span>
+                                {% if session.timestamp_debut %}
+                                    depuis {{ ((now - session.timestamp_debut).total_seconds() / 60)|int }} minutes
+                                {% endif %}
+                            </p>
+                            {% if current_user.role in ['Admin', 'Enseignant'] and (current_user.role == 'Admin' or session.user_id_enseignant == current_user.id) %}
+                                <form action="{{ url_for('session.close_session', session_id=session.id) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir fermer cette session ? Les étudiants ne pourront plus scanner le QR code.')">
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fas fa-times-circle me-2"></i>Fermer la session
+                                    </button>
+                                </form>
+                            {% endif %}
+                        {% else %}
+                            <p class="lead">
+                                <span class="badge bg-danger">Fermée</span>
+                                {% if session.timestamp_fin %}
+                                    le {{ session.timestamp_fin.strftime('%d/%m/%Y à %H:%M') }}
+                                {% endif %}
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h3 class="mb-0">Participants</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Étudiant</th>
+                                    <th>Heure d'arrivée</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if logs %}
+                                    {% for log in logs %}
+                                        <tr>
+                                            <td>{{ log.etudiant.nom_complet }}</td>
+                                            <td>{{ log.timestamp_scan.strftime('%H:%M:%S') }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="2" class="text-center">Aucun participant pour le moment</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">QR Code de la session</h3>
+                </div>
+                <div class="card-body text-center">
+                    <div class="alert alert-info mb-4">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Montrez ce QR code à vos étudiants pour qu'ils puissent scanner et enregistrer leur présence.
+                    </div>
+                    
+                    <div class="d-flex justify-content-center mb-4">
+                        <a href="{{ url_for('session.show_qr_code', session_id=session.id) }}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-qrcode me-2"></i>Afficher le QR Code en plein écran
+                        </a>
+                    </div>
+                    
+                    <div class="d-flex justify-content-center">
+                        <a href="{{ url_for('session.download_qr_code', session_id=session.id) }}" class="btn btn-outline-success me-2">
+                            <i class="fas fa-download me-1"></i>Télécharger
+                        </a>
+                        <button onclick="simulateScan('{{ session.qr_code_dynamique_data }}')" class="btn btn-outline-info">
+                            <i class="fas fa-qrcode me-1"></i>Simuler un scan
+                        </button>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h5 class="card-title">URL pour les étudiants</h5>
+                                <p class="card-text">Les étudiants peuvent scanner ce QR code en accédant à cette URL :</p>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{ request.host_url }}mobile-scan" id="scanUrl" readonly>
+                                    <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('scanUrl')">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card shadow mt-4">
+                <div class="card-header bg-warning">
+                    <h3 class="mb-0">Actualisation en temps réel</h3>
+                </div>
+                <div class="card-body text-center">
+                    <p>Les participants s'afficheront automatiquement lorsqu'ils scanneront le QR code.</p>
+                    <button id="refreshButton" class="btn btn-warning">
+                        <i class="fas fa-sync-alt me-1"></i>Actualiser manuellement
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function printQRCode() {
+        var printContents = document.getElementById('qrCodePrintable').innerHTML;
+        var originalContents = document.body.innerHTML;
+        
+        document.body.innerHTML = `
+            <div style="text-align: center; padding: 20px;">
+                ${printContents}
+            </div>
+        `;
+        
+        window.print();
+        document.body.innerHTML = originalContents;
+    }
+    
+    // Actualisation de la page lorsque le bouton est cliqué
+    document.getElementById('refreshButton').addEventListener('click', function() {
+        location.reload();
+    });
+    
+    // Fonction pour simuler un scan de QR code
+    function simulateScan(qrData) {
+        fetch('/api/scan', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                qr_code: qrData
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            if (data.success) {
+                location.reload();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Une erreur est survenue lors du scan.');
+        });
+    }
+    
+    // Fonction pour copier l'URL dans le presse-papier
+    function copyToClipboard(elementId) {
+        var copyText = document.getElementById(elementId);
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(copyText.value);
+        
+        // Afficher une notification
+        var tooltip = document.createElement("div");
+        tooltip.textContent = "URL copiée !";
+        tooltip.style.position = "fixed";
+        tooltip.style.top = "20px";
+        tooltip.style.left = "50%";
+        tooltip.style.transform = "translateX(-50%)";
+        tooltip.style.padding = "10px 20px";
+        tooltip.style.background = "#4CAF50";
+        tooltip.style.color = "white";
+        tooltip.style.borderRadius = "5px";
+        tooltip.style.zIndex = "1000";
+        
+        document.body.appendChild(tooltip);
+        
+        setTimeout(function() {
+            tooltip.style.opacity = "0";
+            tooltip.style.transition = "opacity 0.5s";
+            setTimeout(function() {
+                document.body.removeChild(tooltip);
+            }, 500);
+        }, 2000);
+    }
+</script>
+{% endblock %}

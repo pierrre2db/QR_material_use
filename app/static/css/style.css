@@ -1,0 +1,99 @@
+/* Style de base pour l'application */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    border-radius: 8px 8px 0 0;
+}
+
+.footer {
+    margin-top: 50px;
+    border-top: 1px solid #e9ecef;
+}
+
+/* Styles pour les QR codes */
+.qr-code-container {
+    text-align: center;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 300px;
+}
+
+.qr-code-image {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Styles pour les tableaux */
+.table-responsive {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: #f8f9fa;
+}
+
+/* Styles pour les boutons d'action */
+.btn-action {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 5px;
+}
+
+/* Styles pour les pages de connexion */
+.login-container {
+    max-width: 400px;
+    margin: 50px auto;
+}
+
+/* Styles pour les dashboards */
+.stats-card {
+    text-align: center;
+    padding: 20px;
+}
+
+.stats-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.stats-number {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+/* Styles pour les formulaires */
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Styles pour les alertes */
+.alert {
+    border-radius: 8px;
+}

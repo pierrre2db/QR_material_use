@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Modifier un Équipement - Système de Gestion d'Équipements{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('main.dashboard') }}">Tableau de bord</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('equipment.list_equipments') }}">Équipements</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('equipment.view_equipment', equipment_id=equipment.id) }}">{{ equipment.id }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Modifier</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-warning">
+                    <h3 class="mb-0">Modifier l'équipement</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('equipment.edit_equipment', equipment_id=equipment.id) }}">
+                        <div class="mb-3">
+                            <label for="equipment_id" class="form-label">ID de l'équipement</label>
+                            <input type="text" class="form-control" id="equipment_id" value="{{ equipment.id }}" disabled>
+                            <div class="form-text">L'ID ne peut pas être modifié</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="type_equipement" class="form-label">Type d'équipement</label>
+                            <input type="text" class="form-control" id="type_equipement" name="type_equipement" value="{{ equipment.type_equipement }}" required>
+                            <div class="form-text">Le type ou modèle de l'équipement</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="nom_salle" class="form-label">Salle</label>
+                            <input type="text" class="form-control" id="nom_salle" name="nom_salle" value="{{ equipment.nom_salle }}" required>
+                            <div class="form-text">La salle où se trouve l'équipement</div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('equipment.view_equipment', equipment_id=equipment.id) }}" class="btn btn-secondary me-md-2">Annuler</a>
+                            <button type="submit" class="btn btn-warning">Enregistrer les modifications</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
