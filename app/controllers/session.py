@@ -46,8 +46,14 @@ def create_session():
         # Générer un ID unique pour la session
         session_id = str(uuid.uuid4())
         
+        # Récupérer les informations de l'équipement
+        equipment = Equipment.query.get(equipment_id)
+        
         # Générer une donnée unique pour le QR code dynamique
-        qr_code_data = f"SESSION_{session_id}_{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
+        ecole = "EAFC-TIC"  # Nom de l'école
+        nom_salle = equipment.nom_salle  # Local
+        type_equipement = equipment.type_equipement  # Équipement
+        qr_code_data = f"SESSION_{ecole}_{nom_salle}_{type_equipement}_{session_id}_{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
         
         # Créer la nouvelle session
         new_session = Session(

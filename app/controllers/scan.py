@@ -72,7 +72,10 @@ def scan_equipment():
     
     # Créer une nouvelle session
     session_id = str(uuid.uuid4())
-    qr_code_data = f"SESSION_{session_id}_{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
+    ecole = "EAFC-TIC"  # Nom de l'école
+    nom_salle = equipment.nom_salle  # Local
+    type_equipement = equipment.type_equipement  # Équipement
+    qr_code_data = f"SESSION_{ecole}_{nom_salle}_{type_equipement}_{session_id}_{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
     
     new_session = Session(
         id=session_id,

@@ -31,7 +31,8 @@ def add_equipment():
         type_equipement = request.form.get('type_equipement')
         
         # Générer une donnée unique pour le QR code statique
-        qr_code_data = f"{equipment_id}_{type_equipement}_{nom_salle}"
+        ecole = "EAFC-TIC"  # Nom de l'école à inclure dans le QR code
+        qr_code_data = f"{ecole}_{equipment_id}_{type_equipement}_{nom_salle}"
         
         # Vérifier si l'ID est déjà utilisé
         existing_equipment = Equipment.query.get(equipment_id)
@@ -97,7 +98,8 @@ def edit_equipment(equipment_id):
         equipment.type_equipement = request.form.get('type_equipement')
         
         # Mettre à jour la donnée du QR code statique
-        equipment.qr_code_statique_data = f"{equipment.id}_{equipment.type_equipement}_{equipment.nom_salle}"
+        ecole = "EAFC-TIC"  # Nom de l'école à inclure dans le QR code
+        equipment.qr_code_statique_data = f"{ecole}_{equipment.id}_{equipment.type_equipement}_{equipment.nom_salle}"
         
         db.session.commit()
         
