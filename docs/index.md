@@ -1,8 +1,20 @@
 # QR Material Use - Documentation
 
+> **Note importante** : Cette version est un MVP (Minimum Viable Product) de test, pas une version finale. Elle est destinée à des fins de démonstration et d'évaluation.
+
 ## Vue d'ensemble
 
 QR Material Use est une application web développée par Pierre De Dobbeleer (EAFC-TIC.BE) pour la gestion d'équipements et le suivi de présence des étudiants via des QR codes.
+
+## Statut du projet
+
+- **Version actuelle** : v0.1.0-beta (MVP de test)
+- **État** : En développement actif
+- **Objectifs futurs** :
+  - Amélioration de la sécurité
+  - Interface utilisateur plus intuitive
+  - Fonctionnalités de reporting avancées
+  - Support multilingue
 
 ## Fonctionnalités principales
 

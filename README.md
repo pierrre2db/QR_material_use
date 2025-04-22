@@ -1,8 +1,16 @@
 # Système de Gestion d'Équipements avec QR Codes
 
+> **Note importante** : Cette version est un MVP (Minimum Viable Product) de test, pas une version finale. Elle est destinée à des fins de démonstration et d'évaluation.
+
 Développé par Pierre De Dobbeleer - EAFC-TIC.BE
 
 Application Flask pour la gestion d'équipements via QR codes, avec stockage dans une base de données SQLite locale.
+
+## Statut du projet
+
+- **Version actuelle** : v0.1.0-beta (MVP de test)
+- **État** : En développement actif
+- **Dernière mise à jour** : Avril 2025
 
 ## Structure du Système
 
