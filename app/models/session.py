@@ -11,7 +11,7 @@ class Session(db.Model):
     timestamp_fin = db.Column(db.DateTime, nullable=True)  # Timestamp de fin de session
     user_id_enseignant = db.Column(db.String(50), db.ForeignKey('users.id'), nullable=False)
     equipment_id = db.Column(db.String(20), db.ForeignKey('equipments.id'), nullable=False)
-    qr_code_dynamique_data = db.Column(db.String(100), unique=True, nullable=False)
+    qr_code_dynamique_data = db.Column(db.String(250), unique=True, nullable=False)  # Augmenté à 250 caractères
     actif = db.Column(db.Boolean, default=True)
     
     # Relations

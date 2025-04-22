@@ -7,7 +7,7 @@ class Equipment(db.Model):
     id = db.Column(db.String(20), primary_key=True)  # EquipementID
     nom_salle = db.Column(db.String(50), nullable=False)
     type_equipement = db.Column(db.String(50), nullable=False)
-    qr_code_statique_data = db.Column(db.String(100), unique=True, nullable=False)
+    qr_code_statique_data = db.Column(db.String(200), unique=True, nullable=False)  # Augmenté à 200 caractères
     
     # Relations
     sessions = db.relationship('Session', backref='equipement', lazy=True)
