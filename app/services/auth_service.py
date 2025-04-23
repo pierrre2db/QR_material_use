@@ -78,16 +78,122 @@ class AuthService:
         
         return None  # Utilisateur non trouvé
     
+    def create_user(self, email, nom_complet, role, password):
+        """Crée un nouvel utilisateur"""
+        # Vérifier si l'utilisateur existe déjà
+        if self.get_user_by_id(email):
+            return False, "Un utilisateur avec cet email existe déjà"
+        
+        # Vérifier si le rôle est valide
+        valid_roles = ["Admin", "Enseignant", "Etudiant"]
+        if role not in valid_roles:
+            return False, f"Le rôle doit être l'un des suivants : {', '.join(valid_roles)}"
+        
+        # Créer le nouvel utilisateur
+        new_user = {
+            "id": email,
+            "nom_complet": nom_complet,
+            "role": role,
+            "password": password,
+            "password_hash": generate_password_hash(password)
+        }
+        
+        # Ajouter l'utilisateur à la liste
+        users = self.get_users(force_refresh=True)
+        users.append(new_user)
+        
+        # Enregistrer la liste mise à jour
+        try:
+            with open(self.test_users_file, 'w') as f:
+                json.dump(users, f, indent=4)
+            
+            # Rafraîchir le cache
+            self._users_cache = users
+            
+            return True, "Utilisateur créé avec succès"
+        except Exception as e:
+            return False, f"Erreur lors de la création de l'utilisateur : {str(e)}"
+    
+    def update_user(self, email, nom_complet=None, role=None, password=None):
+        """Met à jour un utilisateur existant"""
+        # Récupérer tous les utilisateurs
+        users = self.get_users(force_refresh=True)
+        
+        # Chercher l'utilisateur à mettre à jour
+        for i, user in enumerate(users):
+            if user['id'].lower() == email.lower():
+                # Mettre à jour les champs fournis
+                if nom_complet:
+                    user['nom_complet'] = nom_complet
+                
+                if role:
+                    valid_roles = ["Admin", "Enseignant", "Etudiant"]
+                    if role not in valid_roles:
+                        return False, f"Le rôle doit être l'un des suivants : {', '.join(valid_roles)}"
+                    user['role'] = role
+                
+                if password:
+                    user['password'] = password
+                    user['password_hash'] = generate_password_hash(password)
+                
+                # Enregistrer les modifications
+                try:
+                    with open(self.test_users_file, 'w') as f:
+                        json.dump(users, f, indent=4)
+                    
+                    # Rafraîchir le cache
+                    self._users_cache = users
+                    
+                    return True, "Utilisateur mis à jour avec succès"
+                except Exception as e:
+                    return False, f"Erreur lors de la mise à jour de l'utilisateur : {str(e)}"
+        
+        return False, "Utilisateur non trouvé"
+    
+    def delete_user(self, email):
+        """Supprime un utilisateur"""
+        # Récupérer tous les utilisateurs
+        users = self.get_users(force_refresh=True)
+        
+        # Chercher l'utilisateur à supprimer
+        for i, user in enumerate(users):
+            if user['id'].lower() == email.lower():
+                # Vérifier si c'est le dernier administrateur
+                if user['role'] == 'Admin' and len([u for u in users if u['role'] == 'Admin']) <= 1:
+                    return False, "Impossible de supprimer le dernier administrateur"
+                
+                # Supprimer l'utilisateur
+                users.pop(i)
+                
+                # Enregistrer les modifications
+                try:
+                    with open(self.test_users_file, 'w') as f:
+                        json.dump(users, f, indent=4)
+                    
+                    # Rafraîchir le cache
+                    self._users_cache = users
+                    
+                    return True, "Utilisateur supprimé avec succès"
+                except Exception as e:
+                    return False, f"Erreur lors de la suppression de l'utilisateur : {str(e)}"
+        
+        return False, "Utilisateur non trouvé"
+    
+    def get_users_by_role(self, role):
+        """Récupère tous les utilisateurs ayant un rôle spécifique"""
+        users = self.get_users()
+        return [user for user in users if user['role'] == role]
+    
     def create_test_users_file(self):
         """Crée un fichier de test pour les utilisateurs"""
         test_users = [
-            {"id": "admin@ecole.be", "nom_complet": "Administrateur", "role": "Admin", "password": "1234"},
-            {"id": "prof1@ecole.be", "nom_complet": "Jean Dupont", "role": "Enseignant", "password": "1234"},
-            {"id": "prof2@ecole.be", "nom_complet": "Marie Curie", "role": "Enseignant", "password": "1234"},
-            {"id": "prof3@ecole.be", "nom_complet": "Albert Einstein", "role": "Enseignant", "password": "1234"},
-            {"id": "etudiant1@ecole.be", "nom_complet": "Pierre Martin", "role": "Etudiant", "password": "1234"},
-            {"id": "etudiant2@ecole.be", "nom_complet": "Sophie Dubois", "role": "Etudiant", "password": "1234"},
-            {"id": "etudiant3@ecole.be", "nom_complet": "Lucas Bernard", "role": "Etudiant", "password": "1234"}
+            {"id": "admin@ecole.be", "nom_complet": "Administrateur", "role": "Admin", "password": "1234", "password_hash": generate_password_hash("1234")},
+            {"id": "prof1@ecole.be", "nom_complet": "Jean Dupont", "role": "Enseignant", "password": "1234", "password_hash": generate_password_hash("1234")},
+            {"id": "prof2@ecole.be", "nom_complet": "Marie Curie", "role": "Enseignant", "password": "1234", "password_hash": generate_password_hash("1234")},
+            {"id": "prof3@ecole.be", "nom_complet": "Albert Einstein", "role": "Enseignant", "password": "1234", "password_hash": generate_password_hash("1234")},
+            {"id": "etudiant1@ecole.be", "nom_complet": "Pierre Martin", "role": "Etudiant", "password": "1234", "password_hash": generate_password_hash("1234")},
+            {"id": "etudiant2@ecole.be", "nom_complet": "Sophie Dubois", "role": "Etudiant", "password": "1234", "password_hash": generate_password_hash("1234")},
+            {"id": "etudiant3@ecole.be", "nom_complet": "Lucas Bernard", "role": "Etudiant", "password": "1234", "password_hash": generate_password_hash("1234")}
         ]
         
         # Écrire les utilisateurs dans un fichier JSON

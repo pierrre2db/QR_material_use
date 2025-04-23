@@ -29,7 +29,7 @@
                 <h3 class="display-4 text-center">{{ users|length }}</h3>
                 <p class="text-center">Utilisateurs enregistrés</p>
                 <div class="d-grid">
-                    <a href="#" class="btn btn-outline-success">Gérer les utilisateurs</a>
+                    <a href="{{ url_for('user.list_users') }}" class="btn btn-outline-success">Gérer les utilisateurs</a>
                 </div>
             </div>
         </div>

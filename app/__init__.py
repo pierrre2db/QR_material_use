@@ -42,6 +42,9 @@ def create_app():
     from app.controllers.scan import scan as scan_blueprint
     app.register_blueprint(scan_blueprint)
     
+    from app.controllers.user import user as user_blueprint
+    app.register_blueprint(user_blueprint)
+    
     # Ajouter un context processor pour injecter la variable 'now'
     @app.context_processor
     def inject_now():

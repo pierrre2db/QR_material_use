@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Modifier un Utilisateur - Système de Gestion d'Équipements{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('main.dashboard') }}">Tableau de bord</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('user.list_users') }}">Gestion des Utilisateurs</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Modifier un Utilisateur</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Modifier l'utilisateur {{ user.nom_complet }}</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{{ url_for('user.edit_user', user_id=user.id) }}">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" value="{{ user.id }}" disabled>
+                            <div class="form-text">L'email ne peut pas être modifié.</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="nom_complet" class="form-label">Nom complet <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="nom_complet" name="nom_complet" value="{{ user.nom_complet }}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="role" class="form-label">Rôle <span class="text-danger">*</span></label>
+                            <select class="form-select" id="role" name="role" required>
+                                <option value="Admin" {% if user.role == 'Admin' %}selected{% endif %}>Administrateur</option>
+                                <option value="Enseignant" {% if user.role == 'Enseignant' %}selected{% endif %}>Enseignant</option>
+                                <option value="Etudiant" {% if user.role == 'Etudiant' %}selected{% endif %}>Étudiant</option>
+                            </select>
+                            
+                            {% if user.id == current_user.id and user.role == 'Admin' %}
+                            <div class="form-text text-warning">
+                                <i class="fas fa-exclamation-triangle me-1"></i>
+                                Attention : Si vous changez votre propre rôle d'administrateur, vous perdrez l'accès à cette page.
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Nouveau mot de passe</label>
+                            <input type="password" class="form-control" id="password" name="password">
+                            <div class="form-text">Laissez vide pour conserver le mot de passe actuel.</div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('user.list_users') }}" class="btn btn-secondary">Annuler</a>
+                            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
