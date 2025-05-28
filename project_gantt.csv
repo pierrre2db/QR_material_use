@@ -1,0 +1,23 @@
+ID,Tâche,Description,Sprint,Début,Fin,Statut,Type,Priorité,Avancement
+T100,Configuration de l'environnement,Mise en place de l'environnement Python, installation des dépendances, configuration de la base de données SQLite,Sprint 1,01/06/2025,14/06/2025,Terminé,setup,high,100%
+T101,Modèle de données SQLite,Création des modèles pour les équipements, salles et enregistrements d'utilisation avec SQLAlchemy,Sprint 1,01/06/2025,14/06/2025,Terminé,backend,high,100%
+T102,Authentification de base,Mise en place du système d'authentification utilisateur avec rôles (admin/utilisateur),Sprint 1,01/06/2025,14/06/2025,En cours,backend,high,30%
+T120,Configuration du serveur de développement,Mise en place du serveur de développement avec support du rechargement automatique,Sprint 1,01/06/2025,14/06/2025,Terminé,setup,high,100%
+T103,API REST pour la gestion des équipements,Développement des endpoints CRUD pour la gestion des équipements et salles,Sprint 2,15/06/2025,30/06/2025,À faire,backend,high,0%
+T104,Suivi d'utilisation des équipements,Développement des fonctions d'enregistrement et de suivi de l'utilisation des équipements,Sprint 2,15/06/2025,30/06/2025,À faire,backend,high,0%
+T113,Gestion des utilisateurs et permissions,Interface pour gérer les comptes utilisateurs et leurs permissions,Sprint 2,15/06/2025,30/06/2025,À faire,backend,medium,0%
+T121,Interface d'administration des équipements,Créer une interface pour ajouter, modifier et supprimer des équipements,Sprint 2,15/06/2025,30/06/2025,À faire,frontend,high,0%
+T122,API pour la gestion des équipements,Développer les endpoints API pour gérer les équipements,Sprint 2,15/06/2025,30/06/2025,À faire,backend,high,0%
+T105,Interface d'administration,Création du tableau de bord d'administration pour gérer équipements et utilisateurs,Sprint 3,01/07/2025,14/07/2025,À faire,frontend,high,0%
+T106,Formulaire de suivi d'utilisation,Interface utilisateur pour l'enregistrement manuel de l'utilisation des équipements,Sprint 3,01/07/2025,14/07/2025,À faire,frontend,high,0%
+T114,Tableau de bord utilisateur,Vue synthétique de l'utilisation des équipements pour les utilisateurs standards,Sprint 3,01/07/2025,14/07/2025,À faire,frontend,medium,0%
+T107,Génération de rapports,Développement des fonctions d'export des données au format CSV/Excel,Sprint 4,15/07/2025,31/07/2025,À faire,backend,high,0%
+T108,Tableau de bord statistiques,Création du tableau de bord avec indicateurs clés d'utilisation des équipements,Sprint 4,15/07/2025,31/07/2025,À faire,frontend,high,0%
+T115,Rapports personnalisables,Fonctionnalité de création de rapports personnalisés avec filtres avancés,Sprint 4,15/07/2025,31/07/2025,À faire,frontend,medium,0%
+T109,Tests unitaires et d'intégration,Écrire des tests pour les fonctionnalités critiques,Sprint 5,01/08/2025,14/08/2025,À faire,test,high,0%
+T110,Documentation utilisateur,Rédiger le guide d'utilisation et la documentation technique,Sprint 5,01/08/2025,14/08/2025,À faire,documentation,high,0%
+T116,Tests de charge et performance,Vérifier les performances avec un volume important de données,Sprint 5,01/08/2025,14/08/2025,À faire,test,medium,0%
+T111,Guide d'installation et déploiement,Documenter le processus d'installation et de déploiement sur Raspberry Pi/PC,Sprint 6,15/08/2025,31/08/2025,À faire,documentation,high,0%
+T112,Tests utilisateurs et ajustements,Effectuer des tests utilisateurs et implémenter les retours,Sprint 6,15/08/2025,31/08/2025,À faire,test,high,0%
+T117,Matériel de formation,Préparer les supports de formation pour les utilisateurs finaux,Sprint 6,15/08/2025,31/08/2025,À faire,documentation,high,0%
+T118,Plan de maintenance,Établir le plan de maintenance et les procédures de mises à jour,Sprint 6,15/08/2025,31/08/2025,À faire,documentation,medium,0%

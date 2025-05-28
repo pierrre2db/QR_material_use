@@ -1,4 +1,291 @@
 {
-  "T123": { "title": "Auth backend", "status": "TODO" },
-  "T124": { "title": "Tests unitaires", "status": "TODO" }
+  "sprints": [
+    {
+      "id": 1,
+      "name": "Configuration initiale et modèles",
+      "start_date": "2025-06-01",
+      "end_date": "2025-06-14"
+    },
+    {
+      "id": 2,
+      "name": "Fonctionnalités principales",
+      "start_date": "2025-06-15",
+      "end_date": "2025-06-30"
+    },
+    {
+      "id": 3,
+      "name": "Interface utilisateur",
+      "start_date": "2025-07-01",
+      "end_date": "2025-07-14"
+    },
+    {
+      "id": 4,
+      "name": "Rapports et export",
+      "start_date": "2025-07-15",
+      "end_date": "2025-07-31"
+    },
+    {
+      "id": 5,
+      "name": "Tests et documentation",
+      "start_date": "2025-08-01",
+      "end_date": "2025-08-14"
+    },
+    {
+      "id": 6,
+      "name": "Déploiement et formation",
+      "start_date": "2025-08-15",
+      "end_date": "2025-08-31"
+    }
+  ],
+  "tasks": [
+    // Sprint 1 - Configuration initiale
+    {
+      "id": "T100",
+      "title": "Configuration de l'environnement de développement",
+      "description": "Mise en place de l'environnement Python, installation des dépendances, configuration de la base de données SQLite",
+      "status": "DONE",
+      "type": "setup",
+      "sprint": 1,
+      "priority": "high",
+      "notes": "Terminé le 2025-05-21 - Environnement configuré avec Python 3.11, virtualenv, et dépendances principales installées"
+    },
+    {
+      "id": "T101",
+      "title": "Configuration de la structure de base de l'application",
+      "description": "Mise en place de la structure de dossiers, configuration de Flask, SQLAlchemy et Flask-Migrate",
+      "status": "IN_PROGRESS",
+      "type": "setup",
+      "sprint": 1,
+      "priority": "high",
+      "notes": "En cours - Structure de base en place, reste à finaliser les modèles et les migrations"
+    },
+    {
+      "id": "T102",
+      "title": "Configuration de l'API REST",
+      "description": "Mise en place des endpoints de base pour l'API REST avec Flask-RESTful",
+      "status": "TODO",
+      "type": "backend",
+      "sprint": 1,
+      "priority": "high"
+    },
+    {
+      "id": "T103",
+      "title": "Modèles de données",
+      "description": "Création des modèles SQLAlchemy pour les équipements et les usages",
+      "status": "TODO",
+      "type": "backend",
+      "sprint": 1,
+      "priority": "high"
+    },
+    {
+      "id": "T119",
+      "title": "Résolution des conflits de port",
+      "description": "Configuration du serveur pour fonctionner sur le port 5001",
+      "status": "DONE",
+      "type": "setup",
+      "sprint": 1,
+      "priority": "high"
+    },
+    {
+      "id": "T101",
+      "title": "Modèle de données SQLite",
+      "description": "Création des modèles pour les équipements, salles et enregistrements d'utilisation avec SQLAlchemy",
+      "status": "DONE",
+      "type": "backend",
+      "sprint": 1,
+      "priority": "high",
+      "notes": "Terminé le 2025-05-21 - Modèles créés pour les équipements et les enregistrements d'utilisation"
+    },
+    {
+      "id": "T102",
+      "title": "Authentification de base",
+      "description": "Mise en place du système d'authentification utilisateur avec rôles (admin/utilisateur)",
+      "status": "IN_PROGRESS",
+      "type": "backend",
+      "sprint": 1,
+      "priority": "high",
+      "notes": "En cours - À compléter pour la gestion des utilisateurs"
+    },
+    {
+      "id": "T120",
+      "title": "Configuration du serveur de développement",
+      "description": "Mise en place du serveur de développement avec support du rechargement automatique",
+      "status": "DONE",
+      "type": "setup",
+      "sprint": 1,
+      "priority": "high"
+    },
+    
+    // Sprint 2 - Fonctionnalités principales
+    {
+      "id": "T103",
+      "title": "API REST pour la gestion des équipements",
+      "description": "Développement des endpoints CRUD pour la gestion des équipements et salles",
+      "status": "TODO",
+      "type": "backend",
+      "sprint": 2,
+      "priority": "high"
+    },
+    {
+      "id": "T104",
+      "title": "Suivi d'utilisation des équipements",
+      "description": "Développement des fonctions d'enregistrement et de suivi de l'utilisation des équipements",
+      "status": "TODO",
+      "type": "backend",
+      "sprint": 2,
+      "priority": "high"
+    },
+    {
+      "id": "T113",
+      "title": "Gestion des utilisateurs et permissions",
+      "description": "Interface pour gérer les comptes utilisateurs et leurs permissions",
+      "status": "TODO",
+      "type": "backend",
+      "sprint": 2,
+      "priority": "medium"
+    },
+    
+    // Sprint 3 - Interface utilisateur
+    {
+      "id": "T105",
+      "title": "Interface d'administration",
+      "description": "Création du tableau de bord d'administration pour gérer équipements et utilisateurs",
+      "status": "TODO",
+      "type": "frontend",
+      "sprint": 3,
+      "priority": "high"
+    },
+    {
+      "id": "T106",
+      "title": "Formulaire de suivi d'utilisation",
+      "description": "Interface utilisateur pour l'enregistrement manuel de l'utilisation des équipements",
+      "status": "TODO",
+      "type": "frontend",
+      "sprint": 3,
+      "priority": "high"
+    },
+    {
+      "id": "T114",
+      "title": "Tableau de bord utilisateur",
+      "description": "Vue synthétique de l'utilisation des équipements pour les utilisateurs standards",
+      "status": "TODO",
+      "type": "frontend",
+      "sprint": 3,
+      "priority": "medium"
+    },
+    
+    // Sprint 4 - Rapports et export
+    {
+      "id": "T107",
+      "title": "Génération de rapports",
+      "description": "Développement des fonctions d'export des données au format CSV/Excel",
+      "status": "TODO",
+      "type": "backend",
+      "sprint": 4,
+      "priority": "high"
+    },
+    {
+      "id": "T108",
+      "title": "Tableau de bord statistiques",
+      "description": "Création du tableau de bord avec indicateurs clés d'utilisation des équipements",
+      "status": "TODO",
+      "type": "frontend",
+      "sprint": 4,
+      "priority": "high"
+    },
+    {
+      "id": "T115",
+      "title": "Rapports personnalisables",
+      "description": "Fonctionnalité de création de rapports personnalisés avec filtres avancés",
+      "status": "TODO",
+      "type": "frontend",
+      "sprint": 4,
+      "priority": "medium"
+    },
+    
+    // Sprint 5 - Tests et documentation
+    {
+      "id": "T109",
+      "title": "Tests unitaires et d'intégration",
+      "description": "Écrire des tests pour les fonctionnalités critiques",
+      "status": "TODO",
+      "type": "test",
+      "sprint": 5,
+      "priority": "high"
+    },
+    {
+      "id": "T110",
+      "title": "Documentation utilisateur",
+      "description": "Rédiger le guide d'utilisation et la documentation technique",
+      "status": "TODO",
+      "type": "documentation",
+      "sprint": 5,
+      "priority": "high"
+    },
+    {
+      "id": "T116",
+      "title": "Tests de charge et performance",
+      "description": "Vérifier les performances avec un volume important de données",
+      "status": "TODO",
+      "type": "test",
+      "sprint": 5,
+      "priority": "medium"
+    },
+    
+    // Sprint 6 - Déploiement et formation
+    {
+      "id": "T111",
+      "title": "Guide d'installation et déploiement",
+      "description": "Documenter le processus d'installation et de déploiement sur Raspberry Pi/PC",
+      "status": "TODO",
+      "type": "documentation",
+      "sprint": 6,
+      "priority": "high"
+    },
+    {
+      "id": "T112",
+      "title": "Tests utilisateurs et ajustements",
+      "description": "Effectuer des tests utilisateurs et implémenter les retours",
+      "status": "TODO",
+      "type": "test",
+      "sprint": 6,
+      "priority": "high"
+    },
+    {
+      "id": "T117",
+      "title": "Matériel de formation",
+      "description": "Préparer les supports de formation pour les utilisateurs finaux",
+      "status": "TODO",
+      "type": "documentation",
+      "sprint": 6,
+      "priority": "high"
+    },
+    {
+      "id": "T118",
+      "title": "Plan de maintenance",
+      "description": "Établir le plan de maintenance et les procédures de mises à jour",
+      "status": "TODO",
+      "type": "documentation",
+      "sprint": 6,
+      "priority": "medium"
+    },
+    {
+      "id": "T121",
+      "title": "Interface d'administration des équipements",
+      "description": "Créer une interface pour ajouter, modifier et supprimer des équipements",
+      "status": "TODO",
+      "type": "frontend",
+      "sprint": 2,
+      "priority": "high"
+    },
+    {
+      "id": "T122",
+      "title": "API pour la gestion des équipements",
+      "description": "Développer les endpoints API pour gérer les équipements",
+      "status": "TODO",
+      "type": "backend",
+      "sprint": 2,
+      "priority": "high"
+    }
+  ]
 }
