@@ -1,0 +1,461 @@
+/* Variables */
+:root {
+    --primary: #0d6efd;
+    --secondary: #6c757d;
+    --success: #198754;
+    --info: #0dcaf0;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --light: #f8f9fa;
+    --dark: #212529;
+    --body-bg: #f5f7fa;
+}
+
+/* Reset et styles de base */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--body-bg);
+    color: #333;
+    line-height: 1.6;
+}
+
+/* En-tête */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.navbar-brand i {
+    margin-right: 0.5rem;
+}
+
+/* Cartes */
+.card {
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    margin-bottom: 1.5rem;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    font-weight: 600;
+    padding: 1rem 1.25rem;
+}
+
+/* Boutons */
+.btn {
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn i {
+    font-size: 1.1em;
+}
+
+.btn-sm i {
+    font-size: 1em;
+}
+
+/* Badges */
+.badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+    border-radius: 0.25rem;
+}
+
+/* Tableaux */
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    color: #6c757d;
+    border-top: none;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* Formulaire */
+.form-control, .form-select {
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    border: 1px solid #dee2e6;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Alertes */
+.alert {
+    border: none;
+    border-radius: 0.375rem;
+    padding: 1rem 1.25rem;
+}
+
+.alert i {
+    margin-right: 0.5rem;
+}
+
+/* Pied de page */
+footer {
+    padding: 2rem 0;
+    margin-top: 3rem;
+    border-top: 1px solid #e9ecef;
+}
+
+/* Animation de chargement */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    border: 0.25rem solid rgba(13, 110, 253, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--primary);
+    animation: spin 1s ease-in-out infinite;
+}
+
+/* Utilitaires */
+.rounded-lg {
+    border-radius: 0.5rem;
+}
+
+.shadow-sm {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .table-responsive {
+        margin-bottom: 0;
+        border: none;
+    }
+}
+
+/* Animation pour les entrées/sorties */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Personnalisation des onglets */
+.nav-tabs .nav-link {
+    border: none;
+    color: #6c757d;
+    font-weight: 500;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--primary);
+    background: none;
+    border-color: var(--primary);
+}
+
+.nav-tabs .nav-link:hover {
+    border-color: #e9ecef #e9ecef #dee2e6;
+}
+
+/* Personnalisation des modales */
+.modal-content {
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+    border-bottom: 1px solid #e9ecef;
+    padding: 1.25rem 1.5rem;
+}
+
+.modal-footer {
+    border-top: 1px solid #e9ecef;
+    padding: 1rem 1.5rem;
+}
+
+/* Personnalisation des cartes de statistiques */
+.stats-card {
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    background: #fff;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: all 0.2s;
+}
+
+.stats-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.stats-card .icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 1.5rem;
+}
+
+.stats-card .value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.stats-card .label {
+    color: #6c757d;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Personnalisation des cartes de statut */
+.status-card {
+    padding: 1.5rem;
+    border-left: 4px solid;
+    border-radius: 0.5rem;
+    background: #fff;
+    margin-bottom: 1rem;
+}
+
+.status-card.available {
+    border-left-color: var(--success);
+}
+
+.status-card.maintenance {
+    border-left-color: var(--warning);
+}
+
+.status-card.out-of-service {
+    border-left-color: var(--danger);
+}
+
+.status-card h5 {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.status-card p {
+    margin-bottom: 0;
+    color: #6c757d;
+}
+
+/* Personnalisation des cartes d'équipement */
+.equipment-card {
+    transition: all 0.2s;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.equipment-card .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.equipment-card .equipment-actions {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Personnalisation des cartes d'historique */
+.history-item {
+    display: flex;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.history-item:last-child {
+    border-bottom: none;
+}
+
+.history-item .history-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.history-item.scan .history-icon {
+    background-color: rgba(13, 110, 253, 0.1);
+    color: var(--primary);
+}
+
+.history-item.maintenance .history-icon {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: var(--warning);
+}
+
+.history-item.inventory .history-icon {
+    background-color: rgba(25, 135, 84, 0.1);
+    color: var(--success);
+}
+
+.history-item .history-details {
+    flex: 1;
+}
+
+.history-item .history-meta {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+/* Personnalisation des indicateurs de statut */
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+
+.status-indicator.available {
+    background-color: var(--success);
+}
+
+.status-indicator.maintenance {
+    background-color: var(--warning);
+}
+
+.status-indicator.out-of-service {
+    background-color: var(--danger);
+}
+
+/* Badges de statut */
+.status-badge {
+    padding: 0.35em 0.65em;
+    border-radius: 0.25rem;
+    font-weight: 500;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.status-badge.available {
+    background-color: rgba(25, 135, 84, 0.1);
+    color: var(--success);
+}
+
+.status-badge.maintenance {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: var(--warning);
+}
+
+.status-badge.out-of-service {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: var(--danger);
+}
+
+/* Cartes de statut */
+.status-card {
+    border-left: 4px solid;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: #fff;
+}
+
+.status-card.available {
+    border-left-color: var(--success);
+}
+
+.status-card.maintenance {
+    border-left-color: var(--warning);
+}
+
+.status-card.out-of-service {
+    border-left-color: var(--danger);
+}
+
+.status-card h5 {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.status-card p {
+    margin-bottom: 0;
+    color: #6c757d;
+}
+
+/* Badges de statut pour équipements */
+.equipment-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.equipment-status.available {
+    background-color: rgba(25, 135, 84, 0.1);
+    color: var(--success);
+}
+
+.equipment-status.maintenance {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: var(--warning);
+}
+
+.equipment-status.out-of-service {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: var(--danger);
+}

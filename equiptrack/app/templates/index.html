@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+        <div class="p-5 mb-4 bg-light rounded-3">
+            <div class="container-fluid py-5">
+                <h1 class="display-5 fw-bold">Bienvenue sur EquipTrack</h1>
+                <p class="lead">Solution de suivi d'équipements par QR code</p>
+                <hr class="my-4">
+                <p>Gérez facilement votre parc d'équipements, effectuez des inventaires et suivez les maintenances.</p>
+                
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-4">
+                    <a href="{{ url_for('scan.scan_qr') }}" class="btn btn-primary btn-lg px-4 gap-3">
+                        <i class="bi bi-upc-scan"></i> Scanner un équipement
+                    </a>
+                    <a href="{{ url_for('equipment.list_equipment') }}" class="btn btn-outline-secondary btn-lg px-4">
+                        <i class="bi bi-list-ul"></i> Voir les équipements
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 py-5">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3 p-3">
+                            <i class="bi bi-upc-scan fs-1"></i>
+                        </div>
+                        <h3>Scan rapide</h3>
+                        <p>Enregistrez les utilisations en scannant simplement le QR code de l'équipement.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="feature-icon bg-success bg-gradient text-white rounded-3 mb-3 p-3">
+                            <i class="bi bi-clipboard2-pulse fs-1"></i>
+                        </div>
+                        <h3>Suivi en temps réel</h3>
+                        <p>Consultez l'état et l'historique de chaque équipement en un coup d'œil.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="feature-icon bg-warning bg-gradient text-white rounded-3 mb-3 p-3">
+                            <i class="bi bi-tools fs-1"></i>
+                        </div>
+                        <h3>Maintenance simplifiée</h3>
+                        <p>Planifiez et suivez les opérations de maintenance sur vos équipements.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

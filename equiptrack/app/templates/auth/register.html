@@ -1,0 +1,36 @@
+{% extends "auth/base_auth.html" %}
+
+{% block title %}Inscription - EquipTrack{% endblock %}
+
+{% block auth_title %}Créer un compte{% endblock %}
+
+{% block auth_subtitle %}Remplissez le formulaire pour vous inscrire{% endblock %}
+
+{% block auth_content %}
+<form method="POST" action="{{ url_for('auth.register') }}">
+    <div class="mb-3">
+        <label for="username" class="form-label">Nom d'utilisateur</label>
+        <input type="text" class="form-control" id="username" name="username" required 
+               placeholder="Entrez votre nom d'utilisateur">
+    </div>
+    
+    <div class="mb-3">
+        <label for="email" class="form-label">Adresse email</label>
+        <input type="email" class="form-control" id="email" name="email" required
+               placeholder="Entrez votre adresse email">
+    </div>
+    
+    <div class="mb-3">
+        <label for="password" class="form-label">Mot de passe</label>
+        <input type="password" class="form-control" id="password" name="password" required
+               placeholder="Créez un mot de passe">
+        <div class="form-text">Votre mot de passe doit contenir au moins 8 caractères.</div>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">S'inscrire</button>
+</form>
+{% endblock %}
+
+{% block auth_links %}
+<p class="mb-0">Déjà inscrit ? <a href="{{ url_for('auth.login') }}">Connectez-vous ici</a></p>
+{% endblock %}

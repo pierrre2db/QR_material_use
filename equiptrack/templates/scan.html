@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}Scanner un équipement{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold mb-6">Scanner un équipement</h2>
+    
+    <div class="mb-8">
+        <div id="reader" class="w-full h-64 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center mb-4">
+            <div class="text-center p-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <p class="text-gray-500">Positionnez le QR code dans le cadre</p>
+                <p class="text-sm text-gray-400">La détection se fera automatiquement</p>
+            </div>
+        </div>
+        
+        <div class="text-center my-4">
+            <p class="text-gray-600 mb-2">- OU -</p>
+        </div>
+        
+        <div>
+            <label for="equipment_id" class="block text-sm font-medium text-gray-700 mb-1">Saisir le code manuellement</label>
+            <div class="mt-1 flex rounded-md shadow-sm">
+                <input type="text" id="equipment_id" name="equipment_id" 
+                       class="focus:ring-blue-500 focus:border-blue-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
+                       placeholder="Ex: EQ0042">
+                <button onclick="recordManualEntry()" class="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Valider
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="result" class="hidden p-4 mb-4 rounded-lg bg-green-50 text-green-800">
+        <div class="flex">
+            <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div class="ml-3">
+                <p id="success-message" class="text-sm font-medium">Utilisation enregistrée avec succès !</p>
+            </div>
+        </div>
+    </div>
+    
+    <div id="error" class="hidden p-4 mb-4 rounded-lg bg-red-50 text-red-800">
+        <div class="flex">
+            <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div class="ml-3">
+                <p id="error-message" class="text-sm font-medium">Une erreur est survenue. Veuillez réessayer.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/html5-qrcode@2.0.9/html5-qrcode.min.js"></script>
+<script>
+    let html5QrcodeScanner;
+    
+    function onScanSuccess(decodedText, decodedResult) {
+        // Arrêter le scanner après une détection réussie
+        html5QrcodeScanner.clear();
+        
+        // Enregistrer l'utilisation
+        recordUsage(decodedText, true);
+    }
+    
+    function onScanFailure(error) {
+        // La gestion des erreurs est optionnelle
+    }
+    
+    // Démarrer le scanner lorsque la page est chargée
+    document.addEventListener('DOMContentLoaded', function() {
+        html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader", { 
+                fps: 10, 
+                qrbox: 250,
+                aspectRatio: 1.0
+            });
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    });
+    
+    function recordManualEntry() {
+        const equipmentId = document.getElementById('equipment_id').value.trim();
+        if (equipmentId) {
+            recordUsage(equipmentId, false);
+        } else {
+            showError('Veuillez saisir un code équipement');
+        }
+    }
+    
+    function recordUsage(equipmentId, isScan) {
+        // Afficher le chargement
+        document.getElementById('result').classList.add('hidden');
+        document.getElementById('error').classList.add('hidden');
+        
+        // Envoyer la requête au serveur
+        fetch('/api/usage', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                equipment_id: equipmentId,
+                is_scan: isScan
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                showSuccess(`Utilisation de l'équipement ${equipmentId} enregistrée`);
+                // Réinitialiser le champ de saisie
+                document.getElementById('equipment_id').value = '';
+                // Redémarrer le scanner après 2 secondes
+                if (isScan) {
+                    setTimeout(() => {
+                        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+                    }, 2000);
+                }
+            } else {
+                throw new Error(data.error || 'Erreur inconnue');
+            }
+        })
+        .catch(error => {
+            showError(error.message || "Erreur lors de l'enregistrement");
+            // Redémarrer le scanner en cas d'erreur
+            if (isScan) {
+                html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+            }
+        });
+    }
+    
+    function showSuccess(message) {
+        const successDiv = document.getElementById('result');
+        const messageDiv = document.getElementById('success-message');
+        
+        messageDiv.textContent = message || 'Opération réussie !';
+        successDiv.classList.remove('hidden');
+        
+        // Masquer le message après 5 secondes
+        setTimeout(() => {
+            successDiv.classList.add('hidden');
+        }, 5000);
+    }
+    
+    function showError(message) {
+        const errorDiv = document.getElementById('error');
+        const messageDiv = document.getElementById('error-message');
+        
+        messageDiv.textContent = message || 'Une erreur est survenue';
+        errorDiv.classList.remove('hidden');
+    }
+</script>
+{% endblock %}

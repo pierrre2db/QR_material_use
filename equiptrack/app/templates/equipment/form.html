@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Modifier' if form.qr_code.data else 'Ajouter un' }} équipement - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h2 class="h4 mb-0">
+                    <i class="bi bi-{{ 'pencil' if form.qr_code.data else 'plus' }}-circle"></i>
+                    {{ 'Modifier' if form.qr_code.data else 'Ajouter un' }} équipement
+                </h2>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    
+                    {% if form.qr_code.data %}
+                    <div class="mb-3">
+                        <label for="qr_code" class="form-label">QR Code</label>
+                        <input type="text" class="form-control" id="qr_code" value="{{ form.qr_code.data }}" readonly>
+                        <div class="form-text">Le QR code ne peut pas être modifié après la création.</div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        {{ form.name.label(class="form-label") }}
+                        {{ form.name(class="form-control" + (' is-invalid' if form.name.errors)) }}
+                        {% for error in form.name.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.description.label(class="form-label") }}
+                        {{ form.description(class="form-control" + (' is-invalid' if form.description.errors), rows=3) }}
+                        {% for error in form.description.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.status.label(class="form-label") }}
+                        {{ form.status(class="form-select" + (' is-invalid' if form.status.errors)) }}
+                        {% for error in form.status.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a href="{{ url_for('equipment.list_equipment') }}" class="btn btn-outline-secondary me-md-2">
+                            <i class="bi bi-x-circle"></i> Annuler
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> {{ 'Mettre à jour' if form.qr_code.data else 'Enregistrer' }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

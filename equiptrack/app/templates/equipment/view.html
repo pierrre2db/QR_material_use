@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+{% block title %}{{ equipment.name }} - Détails - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>{{ equipment.name }}</h1>
+            <div>
+                <a href="{{ url_for('equipment.edit_equipment', qr_code=equipment.qr_code) }}" 
+                   class="btn btn-outline-primary me-2">
+                    <i class="bi bi-pencil"></i> Modifier
+                </a>
+                <a href="{{ url_for('scan.scan_qr', qr_code=equipment.qr_code) }}" 
+                   class="btn btn-primary">
+                    <i class="bi bi-upc-scan"></i> Scanner
+                </a>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">
+                <h2 class="h5 mb-0">
+                    <i class="bi bi-info-circle"></i> Informations générales
+                </h2>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">QR Code</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge bg-secondary">{{ equipment.qr_code }}</span>
+                    </dd>
+                    
+                    <dt class="col-sm-3">Statut</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge {% if equipment.status == 'disponible' %}bg-success{% elif equipment.status == 'maintenance' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                            {{ equipment.status|title }}
+                        </span>
+                    </dd>
+                    
+                    <dt class="col-sm-3">Date d'ajout</dt>
+                    <dd class="col-sm-9">{{ equipment.created_at|format_datetime }}</dd>
+                    
+                    <dt class="col-sm-3">Dernière utilisation</dt>
+                    <dd class="col-sm-9">
+                        {% if equipment.last_used %}
+                            {{ equipment.last_used|format_datetime }}
+                        {% else %}
+                            Jamais utilisé
+                        {% endif %}
+                    </dd>
+                    
+                    {% if equipment.description %}
+                    <dt class="col-sm-3">Description</dt>
+                    <dd class="col-sm-9">{{ equipment.description|nl2br }}</dd>
+                    {% endif %}
+                </dl>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h2 class="h5 mb-0">
+                    <i class="bi bi-clock-history"></i> Historique des utilisations
+                </h2>
+                <a href="{{ url_for('equipment.export_history', qr_code=equipment.qr_code) }}" 
+                   class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-download"></i> Exporter en CSV
+                </a>
+            </div>
+            <div class="card-body p-0">
+                {% if usages %}
+                <div class="list-group list-group-flush">
+                    {% for usage in usages %}
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">
+                                {% if usage.type == 'scan' %}
+                                    <i class="bi bi-upc-scan text-primary"></i> Scan
+                                {% elif usage.type == 'maintenance' %}
+                                    <i class="bi bi-tools text-warning"></i> Maintenance
+                                {% else %}
+                                    <i class="bi bi-clipboard-check text-success"></i> Inventaire
+                                {% endif %}
+                            </h5>
+                            <small class="text-muted">{{ usage.timestamp|format_datetime }}</small>
+                        </div>
+                        {% if usage.user %}
+                        <p class="mb-1">
+                            <i class="bi bi-person"></i> {{ usage.user }}
+                        </p>
+                        {% endif %}
+                        {% if usage.notes %}
+                        <p class="mb-0">{{ usage.notes }}</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center text-muted py-5">
+                    <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                    Aucune utilisation enregistrée pour cet équipement
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">
+                <h2 class="h5 mb-0">
+                    <i class="bi bi-qr-code"></i> Code QR
+                </h2>
+            </div>
+            <div class="card-body text-center">
+                <div id="qrcode" class="mb-3"></div>
+                <p class="text-muted small">
+                    Scannez ce code pour accéder directement à la fiche de l'équipement
+                </p>
+                <a href="{{ url_for('equipment.view_equipment', qr_code=equipment.qr_code, _external=True) }}" 
+                   class="btn btn-outline-primary btn-sm" 
+                   id="equipmentUrl">
+                    {{ url_for('equipment.view_equipment', qr_code=equipment.qr_code, _external=True) }}
+                </a>
+            </div>
+        </div>
+        
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h2 class="h5 mb-0">
+                    <i class="bi bi-graph-up"></i> Statistiques
+                </h2>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <h6 class="card-subtitle mb-2 text-muted">Utilisation (30 derniers jours)</h6>
+                    <div class="progress" style="height: 20px;">
+                        <div 
+                            class="progress-bar bg-primary"
+                            role="progressbar"
+                            data-percentage="{{ stats.usage_last_30_days.percentage|default(0) }}"
+                            data-count="{{ stats.usage_last_30_days.count|default(0) }}"
+                            data-max-usage="{{ stats.usage_last_30_days.max_usage|default(100) }}">
+                            {{ stats.usage_last_30_days.count|default(0) }} utilisation(s)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <h6 class="card-subtitle mb-2 text-muted">Dernière maintenance</h6>
+                    {% if stats.last_maintenance %}
+                        <p class="mb-0">
+                            {{ stats.last_maintenance.timestamp|format_datetime }}
+                            {% if stats.last_maintenance.notes %}
+                                <br><small class="text-muted">{{ stats.last_maintenance.notes }}</small>
+                            {% endif %}
+                        </p>
+                    {% else %}
+                        <p class="text-muted mb-0">Aucune maintenance enregistrée</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <h6 class="card-subtitle mb-2 text-muted">Activité récente</h6>
+                    <ul class="list-unstyled mb-0">
+                        {% for activity in stats.recent_activity %}
+                        <li class="mb-1">
+                            <i class="bi bi-{{ 'check-circle' if activity.type == 'scan' else 'wrench' }} text-{{ 'success' if activity.type == 'scan' else 'warning' }}"></i>
+                            <small>
+                                {{ activity.timestamp|format_datetime('short') }} - 
+                                {{ activity.type|title }}
+                                {% if activity.user %}({{ activity.user }}){% endif %}
+                            </small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Générer le QR code
+    const qrCodeElement = document.getElementById('qrcode');
+    const equipmentUrl = document.getElementById('equipmentUrl').href;
+    
+    new QRCode(qrCodeElement, {
+        text: equipmentUrl,
+        width: 200,
+        height: 200,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
+    
+    // Initialiser la barre de progression
+    const progressBar = document.querySelector('.progress-bar');
+    if (progressBar) {
+        const percentage = progressBar.dataset.percentage || 0;
+        const count = progressBar.dataset.count || 0;
+        const maxUsage = progressBar.dataset.maxUsage || 100;
+        
+        // Définir les attributs ARIA
+        progressBar.style.width = `${percentage}%`;
+        progressBar.setAttribute('aria-valuenow', count);
+        progressBar.setAttribute('aria-valuemin', '0');
+        progressBar.setAttribute('aria-valuemax', maxUsage);
+    }
+    
+    // Copier l'URL dans le presse-papier
+    document.getElementById('equipmentUrl').addEventListener('click', function(e) {
+        e.preventDefault();
+        navigator.clipboard.writeText(equipmentUrl).then(function() {
+            const toast = new bootstrap.Toast(document.getElementById('copyToast'));
+            toast.show();
+        });
+    });
+});
+</script>
+
+<!-- Toast de notification -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="copyToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <i class="bi bi-check-circle me-2"></i> Lien copié dans le presse-papier
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fermer"></button>
+        </div>
+    </div>
+</div>
+{% endblock %}

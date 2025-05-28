@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+      - ./data:/app/data
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
+      - SECRET_KEY=votre_cle_secrete_ici
+    restart: unless-stopped
+    # Décommenter pour le développement avec rechargement automatique
+    # command: ["flask", "run", "--host=0.0.0.0", "--reload"]
+    command: ["python", "app.py"]
+
+  # Décommenter pour ajouter une base de données PostgreSQL si nécessaire
+  # db:
+  #   image: postgres:13
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data/
+  #   environment:
+  #     - POSTGRES_USER=equiptrack
+  #     - POSTGRES_PASSWORD=equiptrack
+  #     - POSTGRES_DB=equiptrack
+
+# Décommenter si vous utilisez PostgreSQL
+# volumes:
+#   postgres_data:
